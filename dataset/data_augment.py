@@ -205,7 +205,7 @@ def _resize_subtract_mean(image, insize, rgb_mean):
     image -= rgb_mean
     return image.transpose(2, 0, 1)
 
-
+# preproc is the function for performing image augmentation and preprocessing before training
 class preproc(object):
 
     def __init__(self, img_dim, rgb_means):

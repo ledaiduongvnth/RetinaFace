@@ -1,18 +1,10 @@
 import torch
 import torch.optim as optim
 from config import config as cfg
-# TODO improve Widerface dataset
 from dataset.wider_face import WiderFaceDetection, detection_collate
-# preproc is the function for performing image augmentation and preprocessing before training
-# detection_collate is Custom collate fn for dealing with batches of images that have a different
-# number of associated object annotations (bounding boxes)
 from dataset.data_augment import preproc
-# TODO learn a bit about DataLoader
 from torch.utils.data import DataLoader
-
-# TODO improve MultiBoxLoss
 from models.multibox_loss import MultiBoxLoss
-# TODO improve retinaface model
 from models.retinaface import RetinaFace
 
 rgb_mean = (104, 117, 123)
@@ -42,14 +34,6 @@ with torch.no_grad():
 
 def train():
     dataset = WiderFaceDetection(dataset_path, preproc(img_size, rgb_mean))
-    # dataset class inherits torch dataset
-    # batchsize number of sample per training step
-    # shuffle
-    # numworker
-    # collate_fn receives a list of tuples if your __getitem__ function from a Dataset subclass returns a tuple, or just
-    # or just a normal list if your Dataset subclass returns only one element. Its main objective is to create your batch
-    # without spending much time implementing it manually. Try to see it as a glue that you specify the way examples stick
-    # together in batch. If you don't use it, Pytorch only put batch_size examples together as you would using torch.stack
     train_loader = DataLoader(dataset, batch_size, shuffle=True, num_workers=num_workers, collate_fn=detection_collate)
     for epoch in range(max_epoch):
         net.train()
@@ -64,7 +48,7 @@ def train():
             optimizer.step()
             print('Epoch:{}, Learning rate:{:.4f}, Loc: {:.4f} Cla: {:.4f} Landm: {:.4f}'
                   .format(epoch, scheduler.get_last_lr()[0], loss_l.item(), loss_c.item(), loss_landm.item()))
-            # We need to implement validation here
+            # TODO implement validation here
 
         scheduler.step()
         torch.save(net.state_dict(), save_folder + cfg['name'] + '_epoch_{}.pth'.format(str(epoch)))
