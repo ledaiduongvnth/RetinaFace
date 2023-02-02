@@ -6,6 +6,7 @@ from utils.box_utils import match, log_sum_exp
 GPU = True
 
 class MultiBoxLoss(nn.Module):
+    "See this for more information: https://d2l.ai/chapter_computer-vision/anchor.html"
     """SSD Weighted Loss Function
     Compute Targets:
         1) Produce Confidence Target Indices by matching  ground truth boxes
